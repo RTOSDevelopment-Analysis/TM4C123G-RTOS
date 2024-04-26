@@ -7,6 +7,7 @@
 #define LED_BLUE  (1U << 2)
 #define LED_GREEN (1U << 3)
 
+/* Initialize demonstration strictures */
 typedef struct /* __attribute__((packed)) */ {
     uint8_t y;
     uint16_t x;
@@ -27,6 +28,7 @@ Window w, w2;
 Triangle t;
 
 int main(void) {
+		/* #### For demonstration only #### */
     Point *pp;
     Window *wp;
 
@@ -51,7 +53,9 @@ int main(void) {
 
     pp->x = 1U;
     wp->top_left = *pp;
+		/* ################################ */
 
+		/*Switch from macros to structures for accessing TM4C123 register addresses*/
     SYSCTL->GPIOHSCTL |= (1U << 5); /* enable AHB for GPIOF */
     SYSCTL->RCGC2 |= (1U << 5);  /* enable clock for GPIOF */
 
@@ -60,8 +64,8 @@ int main(void) {
 
     /* turn all LEDs off */
     GPIOF_AHB->DATA_Bits[LED_RED | LED_BLUE | LED_GREEN] = 0U;
-
     GPIOF_AHB->DATA_Bits[LED_BLUE] = LED_BLUE;
+		
     while (1) {
         GPIOF_AHB->DATA_Bits[LED_RED] = LED_RED;
         delay(500000);
