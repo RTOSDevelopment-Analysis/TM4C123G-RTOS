@@ -1,7 +1,7 @@
-./objects/qf_time.o: ..\qpc\src\qf\qf_time.c \
-  ..\qpc\ports\arm-cm\qxk\armclang\qp_port.h \
+./objects/qf_time.o: ..\..\qpc\src\qf\qf_time.c \
+  ..\..\qpc\ports\arm-cm\qxk\armclang\qp_port.h \
   C:\Keil_v5\ARM\ARMCLANG\include\stdint.h \
-  C:\Keil_v5\ARM\ARMCLANG\include\stdbool.h ..\qpc\Include\qequeue.h \
-  ..\qpc\Include\qmpool.h ..\qpc\Include\qp.h ..\qpc\Include\qxk.h \
-  ..\qpc\Include\qp_pkg.h ..\qpc\Include\qsafe.h \
-  ..\qpc\Include\qs_dummy.h
+  C:\Keil_v5\ARM\ARMCLANG\include\stdbool.h ..\..\qpc\include\qequeue.h \
+  ..\..\qpc\include\qmpool.h ..\..\qpc\include\qp.h \
+  ..\..\qpc\include\qxk.h ..\..\qpc\include\qp_pkg.h \
+  ..\..\qpc\include\qsafe.h ..\..\qpc\include\qs_dummy.h

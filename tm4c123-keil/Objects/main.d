@@ -1,2 +1,7 @@
-./objects/main.o: main.c C:\Keil_v5\ARM\ARMCLANG\include\stdint.h \
-  joertos.h bsp.h
+./objects/main.o: main.c ..\..\qpc\include\qpc.h \
+  ..\..\qpc\ports\arm-cm\qxk\armclang\qp_port.h \
+  C:\Keil_v5\ARM\ARMCLANG\include\stdint.h \
+  C:\Keil_v5\ARM\ARMCLANG\include\stdbool.h ..\..\qpc\include\qequeue.h \
+  ..\..\qpc\include\qmpool.h ..\..\qpc\include\qp.h \
+  ..\..\qpc\include\qxk.h ..\..\qpc\include\qsafe.h \
+  ..\..\qpc\include\qs_dummy.h bsp.h
