@@ -10,7 +10,11 @@
 /* on-board switch */
 #define BTN_SW1   (1U << 4)
 
-static uint32_t volatile l_tickCtr;
+//SEMA
+// static QXSemaphore Morse_sema;
+
+// MUTEX
+static QXMutex Morse_mutex;
 
 void SysTick_Handler(void) {
 		QXK_ISR_ENTRY(); /* inform QXK about entering an ISR */
@@ -46,6 +50,11 @@ void BSP_init(void) {
 	GPIOF_AHB->IBE &= ~BTN_SW1; /* only one edge generates the interrupt */
 	GPIOF_AHB->IEV &= ~BTN_SW1; /* a falling edge triggers the interrupt */
 	GPIOF_AHB->IM  |= BTN_SW1; /* enable GPIOF interrupt for SW1 */
+	// SEMA
+	// QXSemaphore_init(&Morse_sema, 1U, 1U);
+	
+	//MUTEX
+	QXMutex_init(&Morse_mutex, 6U); /* priority ceiling 6 */
 }
 
 void BSP_ledRedOn(void) {
@@ -64,6 +73,14 @@ void BSP_ledBlueOff(void) {
     GPIOF_AHB->DATA_Bits[LED_BLUE] = 0U;
 }
 
+void BSP_ledBlueToggle(void) {
+	QF_CRIT_STAT
+	
+	QF_CRIT_ENTRY();
+	GPIOF_AHB->DATA ^= LED_BLUE;
+	QF_CRIT_EXIT();
+}
+
 void BSP_ledGreenOn(void) {
     GPIOF_AHB->DATA_Bits[LED_GREEN] = LED_GREEN;
 }
@@ -71,6 +88,53 @@ void BSP_ledGreenOn(void) {
 void BSP_ledGreenOff(void) {
     GPIOF_AHB->DATA_Bits[LED_GREEN] = 0U;
 }
+
+void BSP_ledGreenToggle(void) {
+	QF_CRIT_STAT
+	
+	QF_CRIT_ENTRY();
+	GPIOF_AHB->DATA ^= LED_GREEN;
+	QF_CRIT_EXIT();
+}
+
+void BSP_sendMorseCode(uint32_t bitmask) {
+	uint32_t volatile delay_ctr;
+	enum { DOT_DELAY = 150 };
+	// LOCK
+	// QSchedStatus sstat;
+	
+	//SEMA
+	// QXSemaphore_wait(&Morse_sema, /* pointer to semaphore */
+	// 								 QXTHREAD_NO_TIMEOUT); /* timeout for wait */
+	
+	//LOCK
+	// sstat = QXK_schedLock(5U); /* priority ceiling 5 */
+	
+	//MUTEX
+	QXMutex_lock(&Morse_mutex,
+							 QXTHREAD_NO_TIMEOUT); /* timeout for waiting */
+	
+	for (; bitmask != 0U; bitmask <<= 1) {
+		if ((bitmask & (1U << 31)) != 0U) {
+			BSP_ledGreenOn();
+		}
+		else {
+			BSP_ledGreenOff();
+		}
+		for (delay_ctr = 7*DOT_DELAY; delay_ctr != 0U; --delay_ctr) {
+		}
+	}
+	
+	//SEMA
+	// QXSemaphore_signal(&Morse_sema); /* pointer to semaphore */
+	
+	// LOCK
+	// QXK_schedUnlock(sstat);
+	
+	//MUTEX
+	QXMutex_unlock(&Morse_mutex);
+}
+
 /* callbacks --------------------------------------------- */
 void QF_onStartup(void) {
 	SystemCoreClockUpdate();
